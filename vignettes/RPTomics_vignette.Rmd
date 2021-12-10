@@ -1,0 +1,60 @@
+---
+title: "RPTomics_vignette"
+author: "Sophie Hoffman, Dan Ciotlos, Nate Osher"
+date: "12/2/2021"
+output: html_document
+---
+
+```{r setup, echo=FALSE}
+library(regentrans)
+library(ape)
+library(tidyverse)
+library(devtools)
+library(pheatmap)
+library(phytools)
+library(gridExtra)
+library(cowplot)
+library(tictoc)
+library(Rcpp)
+#TO DO: Eventually we will load our R package
+#devtools::install_github('nateosher/RPTfast')
+#library(RPTfast)
+# set theme for plots
+theme_set(theme_bw() +
+          theme(strip.background = element_rect(fill="white",linetype='blank'),
+          text=element_text(size=15)))
+
+```
+
+## Data Setup
+To learn how to read in raw data for use in our functions, visit the [regentrans vignette](https://snitkin-lab-umich.github.io/regentrans/articles/Introduction.html)
+```{r, echo = FALSE}
+locs <- metadata %>% select(isolate_id, facility) %>% deframe()
+pt <- metadata %>% select(isolate_id, patient_id) %>% deframe()
+head(locs) #named list location source of isolate (i.e. facility)
+head(pt) #named list of patient source of isolate
+head(aln) #from fasta file of variants
+#show how to do this 
+```
+
+Run Fsp
+```{r}
+#TO DO: change name with new package
+ggf_test=ggf_fast(fasta = aln, locs = locs, pt = pt)
+```
+
+Plot Fsp in a heatmap
+```{r}
+#TO DO: add code for plotting Fsp
+```
+
+Run Fst
+```{r}
+#TO DO: add code for running Fst
+```
+
+Plot Fst in a heatmap
+```{r}
+#TO DO: add code for plotting Fst
+
+```
