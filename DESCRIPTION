@@ -1,0 +1,31 @@
+Package: RPTfast
+Title: rcpp implementation of regentrans::get_genetic_flow() for increased speed
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Sophie",
+           family = "Hoffman",
+           role = c("aut", "cre"),
+           email = "shoffm@umich.edu",
+           comment = c(ORCID = "0000-0003-2518-6422")),
+    person(given = "Nathaniel",
+           family = "Osher",
+           role = c("aut", "cre"),
+           email = "oshern@umich.edu",
+           comment = c(ORCID = "YOUR-ORCID-ID")),
+    person(given = "Dan",
+           family = "Ciotlos",
+           role = c("aut", "cre"),
+           email = "dciotlos@umich.edu",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Calculates Fsp and Fsp from Donker et al. 2017 using rcpp
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat (>= 2.0.0)
+Config/testthat/edition: 2
+Imports: 
+    regentrans,
+    Rcpp
