@@ -3,9 +3,11 @@ source("R/fsp_fast.R")
 
 ############################
 fst_fast = function(fasta, locs, pt){
+  # If this isn't true, it will cause issues with the tibbles
   if(length(locs) != length(pt))
     stop("length(locs) != length(pt)")
 
+  # Create a tibble of location data, patient ids, etc.
   data_tibble = full_join(
     tibble(
       id = names(locs),
@@ -18,12 +20,14 @@ fst_fast = function(fasta, locs, pt){
     by = "id"
   )
 
+  # Which locations have multiple samples?
   locs_count = table(data_tibble$locs)
   loc_names = names(locs_count)
   names(locs_count) = NULL
 
   locs_with_multiple = loc_names[locs_count > 1]
 
+  # Subset tibble to those locations
   data_to_analyze = data_tibble %>%
     filter(
       locs %in% locs_with_multiple
@@ -32,19 +36,25 @@ fst_fast = function(fasta, locs, pt){
       locnum = map_dbl(locs, ~ which(locs_with_multiple == .x))
     )
 
+  # Subset fasta, and make it into a numeric matrix for usage with
+  # Rcpp functions
   fasta_to_analyze = apply(fasta[data_to_analyze$id,], 2, as.numeric)
 
+  # Get meta sequences, as well as resulting location/patient info tibble
   meta_and_locs = make_meta_seqs_fast(fasta_to_analyze,
                                       data_to_analyze)
 
+  # Split up those objects
   fasta_sub_meta = meta_and_locs$ms_mat
   final_loc_tibble = meta_and_locs$samples_tib %>%
     mutate(
       locnum = map_dbl(locs, ~ which(locs_with_multiple == .x))
     )
 
+  # For identifying columns of resulting tibble
   naming=str_c(locs_with_multiple,".prob")
 
+  # Get actual fst distance; returns a vector
   SNP1 = get_facil_dist_fst(1:length(locs_with_multiple),
                             fasta_sub_meta,
                             final_loc_tibble$locnum)
