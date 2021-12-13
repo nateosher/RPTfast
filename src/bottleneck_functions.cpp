@@ -18,6 +18,17 @@ double get_allele_freq_btwn_cpp(colvec alleles,
   return  numer/denom;
 }
 
+// [[Rcpp::export]]
+double get_allele_freq_within_cpp(colvec alleles, int allele){
+  colvec ar = alleles.rows(find(alleles == allele));
+  double numer = ar.n_elem;
+  double denom = alleles.n_elem;
+  if(numer > denom){
+    throw std::out_of_range("GAFW: numer > denom");
+  }
+  return  numer/denom;
+}
+
 
 // [[Rcpp::export]]
 mat get_facil_dist(arma::colvec locs_unique,
@@ -91,8 +102,39 @@ mat get_facil_dist(arma::colvec locs_unique,
 }
 
 // [[Rcpp::export]]
+mat get_facil_dist_fst(arma::colvec locs_unique,
+                       arma::mat fasta_sub_meta,
+                       arma::colvec sample_locs) {
+
+  // Final matrix for storing allele prevalence
+  mat final_prev(fasta_sub_meta.n_cols, locs_unique.n_elem, fill::zeros);
+
+  for(int i = 0; i < locs_unique.n_elem; i++){
+    // CONSTRUCTING SUB-MATRIX
+    int cur_loc = locs_unique(i);
+
+    mat cur_submat = fasta_sub_meta.rows(find(sample_locs == cur_loc));
+
+    for(int k = 0; k < cur_submat.n_cols; k++){
+      // Get alleles for this column
+      colvec cur_sm_col = cur_submat.col(k);
+      colvec unique_alleles = unique(cur_sm_col);
+
+      // If there are two alleles at the location:
+      if(unique_alleles.n_rows == 2){
+        double cur_prev = get_allele_freq_within_cpp(cur_sm_col,
+                                                     unique_alleles(0));
+        final_prev(k, i) = cur_prev;
+      }
+
+    }
+  }
+  return final_prev;
+}
+
+// [[Rcpp::export]]
 NumericVector make_ref_cpp(NumericMatrix fasta){
-  NumericVector final_ref(fasta.nrow());
+  NumericVector final_ref(fasta.ncol());
   // Hashmap to make counting easier (i.e. can just use array)
   std::unordered_map<int, int> m = {
     {72,0},
