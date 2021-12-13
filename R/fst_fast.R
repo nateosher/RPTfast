@@ -1,7 +1,6 @@
 sourceCpp("src/bottleneck_functions.cpp")
 source("R/fsp_fast.R")
 
-############################
 fst_fast = function(fasta, locs, pt){
   # If this isn't true, it will cause issues with the tibbles
   if(length(locs) != length(pt))
