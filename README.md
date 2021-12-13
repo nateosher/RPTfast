@@ -4,4 +4,4 @@ rcpp implementation of [regentrans](https://github.com/Snitkin-Lab-Umich/regentr
 
 Fsp and Fst from Donker et al. 2017
 
-`RPTfast` can be installed using the command `devtools::install_github('oshern/RPTfast')` in R
+`RPTfast` can be installed using the command `devtools::install_github('nateosher/RPTfast')` in R
