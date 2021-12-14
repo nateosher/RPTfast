@@ -14,7 +14,7 @@
 #' }
 fsp_fast = function(fasta, locs, pt){
   #source
-  sourceCpp("src/bottleneck_functions.cpp")
+  # sourceCpp("src/bottleneck_functions.cpp")
   #check input
   check_fsp_fst_input(fasta, locs, pt)
 

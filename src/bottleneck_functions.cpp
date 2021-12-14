@@ -4,6 +4,7 @@
 using namespace Rcpp;
 using namespace arma;
 
+//' @export
 // [[Rcpp::export]]
 double get_allele_freq_btwn_cpp(arma::colvec alleles,
                                 arma::colvec locations,
@@ -18,6 +19,7 @@ double get_allele_freq_btwn_cpp(arma::colvec alleles,
   return  numer/denom;
 }
 
+//' @export
 // [[Rcpp::export]]
 double get_allele_freq_within_cpp(arma::colvec alleles, int allele){
   arma::colvec ar = alleles.rows(find(alleles == allele));
@@ -29,7 +31,7 @@ double get_allele_freq_within_cpp(arma::colvec alleles, int allele){
   return  numer/denom;
 }
 
-
+//' @export
 // [[Rcpp::export]]
 arma::mat get_facil_dist(arma::colvec locs_unique,
                    arma::mat fasta_sub_meta,
@@ -101,6 +103,7 @@ arma::mat get_facil_dist(arma::colvec locs_unique,
   return final_dists;
 }
 
+//' @export
 // [[Rcpp::export]]
 arma::mat get_facil_dist_fst(arma::colvec locs_unique,
                        arma::mat fasta_sub_meta,
@@ -132,6 +135,7 @@ arma::mat get_facil_dist_fst(arma::colvec locs_unique,
   return final_prev;
 }
 
+//' @export
 // [[Rcpp::export]]
 NumericVector make_ref_cpp(NumericMatrix fasta){
   NumericVector final_ref(fasta.ncol());
@@ -169,6 +173,7 @@ NumericVector make_ref_cpp(NumericMatrix fasta){
   return final_ref;
 }
 
+//' @export
 // [[Rcpp::export]]
 NumericVector find_major_alleles_cpp(NumericMatrix fasta, NumericVector ref){
   NumericVector final_ref(ref.length());
