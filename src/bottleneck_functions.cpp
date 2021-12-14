@@ -5,12 +5,12 @@ using namespace Rcpp;
 using namespace arma;
 
 // [[Rcpp::export]]
-double get_allele_freq_btwn_cpp(colvec alleles,
-                                colvec locations,
+double get_allele_freq_btwn_cpp(arma::colvec alleles,
+                                arma::colvec locations,
                                 int allele, int location){
-  colvec ar = alleles.rows(find(alleles == allele && locations == location));
+  arma::colvec ar = alleles.rows(find(alleles == allele && locations == location));
   double numer = ar.n_elem;
-  colvec lr = locations.rows(find(locations == location));
+  arma::colvec lr = locations.rows(find(locations == location));
   double denom = lr.n_elem;
   if(numer > denom){
     throw std::out_of_range("GAFB: numer > denom");
@@ -19,8 +19,8 @@ double get_allele_freq_btwn_cpp(colvec alleles,
 }
 
 // [[Rcpp::export]]
-double get_allele_freq_within_cpp(colvec alleles, int allele){
-  colvec ar = alleles.rows(find(alleles == allele));
+double get_allele_freq_within_cpp(arma::colvec alleles, int allele){
+  arma::colvec ar = alleles.rows(find(alleles == allele));
   double numer = ar.n_elem;
   double denom = alleles.n_elem;
   if(numer > denom){
@@ -31,26 +31,26 @@ double get_allele_freq_within_cpp(colvec alleles, int allele){
 
 
 // [[Rcpp::export]]
-mat get_facil_dist(arma::colvec locs_unique,
+arma::mat get_facil_dist(arma::colvec locs_unique,
                    arma::mat fasta_sub_meta,
                    arma::colvec sample_locs) {
   // Intentionally starting at 1, since diagonals are all 0
   // Further, note I am only filling in bottom diagonal
 
   // Final matrix for storing distances
-  mat final_dists(locs_unique.n_elem, locs_unique.n_elem, fill::zeros);
+  arma::mat final_dists(locs_unique.n_elem, locs_unique.n_elem, fill::zeros);
 
   for(int i = 1; i < locs_unique.n_elem; i++){
     for(int j = 0; j < i; j++){
-      // CONSTRUCTING SUB-MATRIX
+      // CONSTRUCTING SUBMATRIX
       int row_loc = locs_unique(i);
       int col_loc = locs_unique(j);
 
-      mat cur_submat = fasta_sub_meta.rows(find(sample_locs == row_loc ||
+      arma::mat cur_submat = fasta_sub_meta.rows(find(sample_locs == row_loc ||
         sample_locs == col_loc));
-      mat cur_rowloc_submat = fasta_sub_meta.rows(find(sample_locs == row_loc));
-      mat cur_colloc_submat = fasta_sub_meta.rows(find(sample_locs == col_loc));
-      colvec cur_submat_locs = sample_locs.rows(find(sample_locs == row_loc ||
+      arma::mat cur_rowloc_submat = fasta_sub_meta.rows(find(sample_locs == row_loc));
+      arma::mat cur_colloc_submat = fasta_sub_meta.rows(find(sample_locs == col_loc));
+      arma::colvec cur_submat_locs = sample_locs.rows(find(sample_locs == row_loc ||
         sample_locs == col_loc));
 
       // To store variance at each site
@@ -60,11 +60,11 @@ mat get_facil_dist(arma::colvec locs_unique,
 
       for(int k = 0; k < cur_submat.n_cols; k++){
         // Get alleles for this column
-        colvec cur_sm_col = cur_submat.col(k);
-        colvec cur_rl_col = cur_rowloc_submat.col(k);
-        colvec cur_cl_col = cur_colloc_submat.col(k);
-        colvec unique_alleles = unique(cur_sm_col);
-        colvec unique_locs = unique(cur_submat_locs);
+        arma::colvec cur_sm_col = cur_submat.col(k);
+        arma::colvec cur_rl_col = cur_rowloc_submat.col(k);
+        arma::colvec cur_cl_col = cur_colloc_submat.col(k);
+        arma::colvec unique_alleles = unique(cur_sm_col);
+        arma::colvec unique_locs = unique(cur_submat_locs);
 
         // If there are two alleles at the location:
         if(unique_alleles.n_rows == 2){
@@ -102,23 +102,23 @@ mat get_facil_dist(arma::colvec locs_unique,
 }
 
 // [[Rcpp::export]]
-mat get_facil_dist_fst(arma::colvec locs_unique,
+arma::mat get_facil_dist_fst(arma::colvec locs_unique,
                        arma::mat fasta_sub_meta,
                        arma::colvec sample_locs) {
 
   // Final matrix for storing allele prevalence
-  mat final_prev(fasta_sub_meta.n_cols, locs_unique.n_elem, fill::zeros);
+  arma::mat final_prev(fasta_sub_meta.n_cols, locs_unique.n_elem, fill::zeros);
 
   for(int i = 0; i < locs_unique.n_elem; i++){
     // CONSTRUCTING SUB-MATRIX
     int cur_loc = locs_unique(i);
 
-    mat cur_submat = fasta_sub_meta.rows(find(sample_locs == cur_loc));
+    arma::mat cur_submat = fasta_sub_meta.rows(find(sample_locs == cur_loc));
 
     for(int k = 0; k < cur_submat.n_cols; k++){
       // Get alleles for this column
-      colvec cur_sm_col = cur_submat.col(k);
-      colvec unique_alleles = unique(cur_sm_col);
+      arma::colvec cur_sm_col = cur_submat.col(k);
+      arma::colvec unique_alleles = unique(cur_sm_col);
 
       // If there are two alleles at the location:
       if(unique_alleles.n_rows == 2){

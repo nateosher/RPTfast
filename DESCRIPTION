@@ -33,3 +33,4 @@ Imports:
     tibble,
     dplyr,
     purrr
+LinkingTo: Rcpp, RcppArmadillo
