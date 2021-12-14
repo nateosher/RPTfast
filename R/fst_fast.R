@@ -1,10 +1,29 @@
-sourceCpp("src/bottleneck_functions.cpp")
-source("R/fsp_fast.R")
-
+#' Calculate Fst from Donker et al. 2017
+#'
+#' @param fasta ape DNAbin object (i.e. from fasta file of SNPs) using read.fasta
+#' @param locs a named vector of locations of isolates (e.g. facility of isolation), with the name being the sample ID
+#' @param pt a named vector of patients each isolate originated from, with the name being the sample ID
+#'
+#' @return named numeric vector of Fst for each facility
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' locs <- regentrans::metadata %>% dplyr::select(isolate_id, facility) %>% tibble::deframe()
+#' pt <- regentrans::metadata %>% dplyr::select(isolate_id, patient_id) %>% tibble::deframe()
+#' fasta <- regentrans::aln
+#' fst <- fst_fast(fasta = fasta, locs = locs, pt = pt)
+#' }
 fst_fast = function(fasta, locs, pt){
+  #source
+  sourceCpp("src/bottleneck_functions.cpp")
+  #check input
+  check_fsp_fst_input(fasta, locs, pt)
+
   # If this isn't true, it will cause issues with the tibbles
-  if(length(locs) != length(pt))
-    stop("length(locs) != length(pt)")
+  # This functionality has been moved to input checks
+  #if(length(locs) != length(pt))
+  #  stop("length(locs) != length(pt)")
 
   # Create a tibble of location data, patient ids, etc.
   data_tibble = full_join(

@@ -1,16 +1,27 @@
-library(Rcpp)
-library(RcppArmadillo)
-library(tibble)
-library(dplyr)
-library(purrr)
-sourceCpp("src/bottleneck_functions.cpp")
-
-
+#' Calculate Fsp from Donker et al. 2017
+#'
+#' @inheritParams fst_fast
+#'
+#' @return facility x facility lower tri matrix of Fsp values
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' locs <- regentrans::metadata %>% dplyr::select(isolate_id, facility) %>% tibble::deframe()
+#' pt <- regentrans::metadata %>% dplyr::select(isolate_id, patient_id) %>% tibble::deframe()
+#' fasta <- regentrans::aln
+#' fsp <- fsp_fast(fasta = fasta, locs = locs, pt = pt)
+#' }
 fsp_fast = function(fasta, locs, pt){
+  #source
+  sourceCpp("src/bottleneck_functions.cpp")
+  #check input
+  check_fsp_fst_input(fasta, locs, pt)
+
   # If this isn't true, it will cause issues with the tibbles
-  # It also should be true
-  if(length(locs) != length(pt))
-    stop("length(locs) != length(pt)")
+  # This functionality has been moved to input checks
+  #if(length(locs) != length(pt))
+  #  stop("length(locs) != length(pt)")
 
   # Create a tibble of location data, patient ids, etc.
   data_tibble = full_join(
