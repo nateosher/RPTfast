@@ -38,20 +38,20 @@ check_locs <- function(locs){
 #'
 #' @noRd
 #'
-check_dists_vs_locs <- function(dists, locs){
+check_fasta_vs_locs <- function(fasta, locs){
   #check that there are less than or equal to the number of samples in the vector than in the dists matrix
-  if(length(locs) > nrow(dists)){
+  if(length(locs) > nrow(fasta)){
     warning(paste("You have supplied a list of more isolates (n = ", length(locs),
                   ") with locations than exist in your SNV distance matrix (n = ",
-                  nrow(dists),
+                  nrow(fasta),
                   "). Will subset"))
   }
   #check that there are at least 2 dists and locs in common
-  if(length(intersect(rownames(dists), names(locs))) < 2){
+  if(length(intersect(rownames(fasta), names(locs))) < 2){
     stop(paste("You have not provided locations of at least 2 isolates in your SNV distance matrix (dists). Please provide locations for at least 2 isolates in your SNV distance matrix."))
   }
   #warn if they will be subsetting??
-  if(!setequal(names(locs), rownames(dists))){
+  if(!setequal(names(locs), rownames(fasta))){
     warning("You have provided an isolate location vector of fewer isolates than are contained in your SNV distance matrix (dists). Will subset")
   }
 }
@@ -93,6 +93,6 @@ check_fsp_fst_input <- function(fasta, locs, pt){
   #check that locs, pt have the same isolates
   check_locs_vs_pt(locs, pt)
   #check that the locs names exist in the dists dataframe
-  check_dists_vs_locs(fasta, locs)
+  check_fasta_vs_locs(fasta, locs)
 }
 
