@@ -93,6 +93,6 @@ check_fsp_fst_input <- function(fasta, locs, pt){
   #check that locs, pt have the same isolates
   check_locs_vs_pt(locs, pt)
   #check that the locs names exist in the dists dataframe
-  check_dists_vs_locs(dists, locs)
+  check_dists_vs_locs(fasta, locs)
 }
 
