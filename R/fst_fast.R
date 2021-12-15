@@ -26,12 +26,12 @@ fst_fast = function(fasta, locs, pt){
   #  stop("length(locs) != length(pt)")
 
   # Create a tibble of location data, patient ids, etc.
-  data_tibble = full_join(
-    tibble(
+  data_tibble = dplyr::full_join(
+    tibble::tibble(
       id = names(locs),
       locs = unname(locs)
     ),
-    tibble(
+    tibble::tibble(
       id = names(pt),
       pt = unname(pt)
     ),
@@ -47,11 +47,11 @@ fst_fast = function(fasta, locs, pt){
 
   # Subset tibble to those locations
   data_to_analyze = data_tibble %>%
-    filter(
+    dplyr::filter(
       locs %in% locs_with_multiple
     ) %>%
-    mutate(
-      locnum = map_dbl(locs, ~ which(locs_with_multiple == .x))
+    dplyr::mutate(
+      locnum = purrr::map_dbl(locs, ~ which(locs_with_multiple == .x))
     )
 
   # Subset fasta, and make it into a numeric matrix for usage with
@@ -65,19 +65,19 @@ fst_fast = function(fasta, locs, pt){
   # Split up those objects
   fasta_sub_meta = meta_and_locs$ms_mat
   final_loc_tibble = meta_and_locs$samples_tib %>%
-    mutate(
-      locnum = map_dbl(locs, ~ which(locs_with_multiple == .x))
+    dplyr::mutate(
+      locnum = purrr::map_dbl(locs, ~ which(locs_with_multiple == .x))
     )
 
   # For identifying columns of resulting tibble
-  naming=str_c(locs_with_multiple,".prob")
+  naming=paste0(locs_with_multiple,".prob")
 
   # Get actual fst distance; returns a vector
   SNP1 = get_facil_dist_fst(1:length(locs_with_multiple),
                             fasta_sub_meta,
                             final_loc_tibble$locnum)
   colnames(SNP1) = naming
-  SNP1 = as_tibble(SNP1)
+  SNP1 = tibble::as_tibble(SNP1)
 
   #Finding S_{si} which represent the sum of all proportions of allele 1 in all population at SNP location i
   SNP1$psum=rowSums(SNP1[naming],na.rm=T)
@@ -103,6 +103,6 @@ fst_fast = function(fasta, locs, pt){
   H_Ss=colSums((ps*ps_minus1)^2,na.rm=TRUE)
   H_S=(H_Sh+H_Ss)/2
   fst=(H_S-H_P)/H_S
-  names(fst)=str_c(locs_with_multiple,".fst")
+  names(fst)=paste0(locs_with_multiple,".fst")
   return(fst)
 }

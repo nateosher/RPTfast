@@ -17,5 +17,4 @@ test_that("fst_fast works", {
   expect_true(all(names(fst) == c("A.fst", "F.fst", "H.fst")))
   #values between 0 and 1
   expect_true(all(fst <= 1) && all(fst >= 0))
-
 })
