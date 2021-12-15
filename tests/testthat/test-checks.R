@@ -1,4 +1,5 @@
 #create test data
+library(ape)
 locs <- regentrans::metadata %>% dplyr::select(isolate_id, facility) %>% tibble::deframe()
 pt <- regentrans::metadata %>% dplyr::select(isolate_id, patient_id) %>% tibble::deframe()
 fasta <- regentrans::aln
@@ -8,7 +9,7 @@ test_locs_2 <- locs[1:3]
 test_locs_3 <- locs[2:5]
 test_pt <- pt[1:4]
 test_pt_2 <- pt[2:5]
-test_fasta <- as.DNAbin(fasta[names(test_locs),])
+test_fasta <- fasta[names(test_locs),]
 
 test_that("check_fsp_fst_input works", {
   #one good test
@@ -56,4 +57,3 @@ test_that("check_fsp_fst_input works", {
     fixed = TRUE
   )
 })
-
