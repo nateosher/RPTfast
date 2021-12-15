@@ -81,23 +81,28 @@ fst_fast = function(fasta, locs, pt){
 
   #Finding S_{si} which represent the sum of all proportions of allele 1 in all population at SNP location i
   SNP1$psum=rowSums(SNP1[naming],na.rm=T)
-  #Finding the number of populations that do not have this SNP location i tested
+  #Finding the number of populations that do have this SNP location i tested (if any)
   SNP1$count=rowSums(!is.na(SNP1[naming]))
   #If SNP location i is tested in one population, it is excluded as mean in all other populations is non-existent
   SNP_reduced=SNP1 %>% dplyr::filter(count!=1) # %>% dplyr::select(-all)
-  #Calculating n_k for all SNP locations i
+  #Calculating n_k for all SNP locations i, where n_k is the number of facilities where the SNP location i is tested
   nk=SNP_reduced$count
-  #Making a variable for S_{si}
+  #Making a variable for S_{si} with the reduced SNP locations
   psum=SNP_reduced$psum
-  #Making matrix needed to calculate FST
+  #Making a matrix needed to calculate FST
   SNP_reduced2=SNP_reduced%>%  dplyr::select(-count,-psum)%>% as.matrix()
+  
+  #Calculating proportion of allele 1 and 2 for each facility separately
   ph=SNP_reduced2
   ph_minus1=1-SNP_reduced2
 
+  #Calculating proportion of allele 1 and 2 for the combined facilities (except the one being tested)
   ps=apply(SNP_reduced2,MARGIN=2,function(x){
     (psum-x)/(nk-1)
   })
   ps_minus1=1-ps
+  
+  #Calculating fst
   H_P=colSums(ph*ph_minus1*ps*ps_minus1,na.rm=TRUE)
   H_Sh=colSums((ph*ph_minus1)^2,na.rm=TRUE)
   H_Ss=colSums((ps*ps_minus1)^2,na.rm=TRUE)
