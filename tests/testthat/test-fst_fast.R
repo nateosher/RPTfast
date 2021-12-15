@@ -4,7 +4,7 @@ fasta <- regentrans::aln
 
 test_locs_4 <- locs[locs %in% c("A", "F", "H")]
 test_pt_3 <- pt[names(pt) %in% names(test_locs_4)]
-test_fasta_2 <- aln[names(test_locs_4),]
+test_fasta_2 <- fasta[names(test_locs_4),]
 
 fst <- fst_fast(fasta = test_fasta_2, locs = test_locs_4, pt = test_pt_3)
 
