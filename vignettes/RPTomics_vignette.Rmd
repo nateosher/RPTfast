@@ -38,23 +38,64 @@ head(aln) #from fasta file of variants
 
 Run Fsp
 ```{r}
-#TO DO: change name with new package
 fsp=fsp_fast(fasta = aln, locs = locs, pt = pt)
 ```
 
 Plot Fsp in a heatmap
 ```{r}
-#TO DO: add code for plotting Fsp
+#Run fsp_fast() on data
+fsp_data = fsp_fast(fasta = aln, locs = locs, pt = pt)
+
+#Reshape data to allow for ggplot to plot a heatmap
+data=reshape2::melt(fsp_data)%>% 
+     filter(value!=0)%>% 
+     dplyr::rename(Fsp=value,Facility1=Var1,Facility2=Var2)
+     
+#Plot heatmap
+ggplot(data, aes(x=Facility2, y=Facility1, fill=Fsp))+
+      geom_tile()+ 
+      theme(panel.background = element_rect(fill='light gray', colour='light gray'),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            axis.text=element_text(size=16),
+            axis.title=element_text(size=20),
+            legend.title=element_text(size=14),
+            legend.text=element_text(size=14))+
+      scale_fill_gradient2(low = "#4575b4",high = "#d73027",midpoint=0.5)+
+      xlab("Facility 1")+
+      ylab("Facility 2")
 ```
 
 Run Fst
 ```{r}
-#TO DO: add code for running Fst
 fst=fst_fast(fasta = aln, locs = locs, pt = pt)
 ```
 
 Plot Fst in a heatmap
 ```{r}
-#TO DO: add code for plotting Fst
+#Run fst_fast() on data
+fst_data = fst_fast(fasta = aln, locs = locs, pt = pt)
 
+#Reshape data to allow for ggplot to plot a heatmap
+data=reshape2::melt(as.matrix(fst_data))%>% 
+     filter(value!=0)%>% 
+     dplyr::rename(Fst=value,Facility2=Var2)%>% 
+     dplyr::mutate(Facility1=substr(Var1, start = 1, stop = 1))
+
+#Plot heatmap
+ggplot(data, aes(x=Facility2, y=Facility1, fill=Fst))+
+       geom_tile()+ 
+       theme(panel.background = element_rect(fill='light gray', colour='light gray'),
+             panel.grid.major = element_blank(),
+             panel.grid.minor = element_blank(),
+             axis.text=element_text(size=16),
+             axis.title=element_text(size=20),
+             legend.title=element_text(size=14), 
+             legend.text=element_text(size=14),
+             axis.title.x=element_blank(),
+             axis.text.x=element_blank(),
+             axis.ticks.x=element_blank())+
+       scale_fill_gradient2(low = "#4575b4",high = "#d73027",midpoint=0.5)+
+       ylab("Facility")
+#To reshape plot, please change dimensions of graphical output in R
 ```
