@@ -15,8 +15,6 @@ library(gridExtra)
 library(cowplot)
 library(tictoc)
 library(Rcpp)
-#TO DO: Eventually we will load our R package
-#devtools::install_github('nateosher/RPTfast')
 library(RPTfast)
 # set theme for plots
 theme_set(theme_bw() +
