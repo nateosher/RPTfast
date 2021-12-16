@@ -5,7 +5,7 @@ date: "12/2/2021"
 output: html_document
 ---
 
-```{r setup, echo=FALSE,message=FALSE}
+```{r setup, echo=FALSE,message=FALSE,warning=FALSE}
 library(regentrans)
 library(ape)
 library(tidyverse)
