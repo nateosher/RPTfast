@@ -171,8 +171,20 @@ pre code {
 </div>
 
 
-<pre><code>## Warning in system(&quot;timedatectl&quot;, intern = TRUE): running command &#39;timedatectl&#39;
-## had status 1</code></pre>
+<pre class="r"><code>library(regentrans)
+library(ape)
+library(tidyverse)
+library(devtools)
+library(pheatmap)
+library(gridExtra)
+library(cowplot)
+library(tictoc)
+library(Rcpp)
+library(RPTfast)
+# set theme for plots
+theme_set(theme_bw() +
+          theme(strip.background = element_rect(fill=&quot;white&quot;,linetype=&#39;blank&#39;),
+          text=element_text(size=15)))</code></pre>
 <div id="data-setup" class="section level2">
 <h2>Data Setup</h2>
 <p>To learn how to read in raw data for use in our functions, visit the <a href="https://snitkin-lab-umich.github.io/regentrans/articles/Introduction.html">regentrans vignette</a></p>
@@ -196,9 +208,6 @@ pre code {
 ##     a     c     g     t 
 ## 0.176 0.326 0.326 0.173 
 ## (Total: 503.86 kb)</code></pre>
-</div>
-<div id="data-output" class="section level2">
-<h2>Data Output</h2>
 <p>Run Fsp</p>
 <pre class="r"><code>fsp=fsp_fast(fasta = aln, locs = locs, pt = pt)</code></pre>
 <p>Plot Fsp in a heatmap</p>
